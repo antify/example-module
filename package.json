@@ -1,0 +1,48 @@
+{
+  "name": "@antify/example-module",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/module.mjs",
+      "require": "./dist/module.cjs",
+      "types": "./dist/types.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
+  "scripts": {
+    "prepack": "nuxt-module-build build",
+    "dev": "nuxi dev playground",
+    "dev:build": "nuxi build playground",
+    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "release-minor": "pnpm test && standard-version -- --release-as minor && git push --follow-tags && pnpm publish",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@antify/ant-database": "file:../antify/packages/ant-database",
+    "@antify/ant-guard": "file:../antify/packages/ant-guard",
+    "@antify/context": "file:../antify/packages/context",
+    "@antify/kit": "file:../antify/packages/kit",
+    "@antify/validate": "1.14.0",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@nuxt/kit": "^3.8.2"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
+    "@nuxt/eslint-config": "^0.2.0",
+    "@nuxt/module-builder": "^0.5.4",
+    "@nuxt/schema": "^3.8.2",
+    "eslint": "^8.56.0",
+    "nuxt": "^3.8.2",
+    "standard-version": "latest"
+  },
+  "peerDependencies": {
+    "@antify/ui-module": "file:../ui-module"
+  }
+}
