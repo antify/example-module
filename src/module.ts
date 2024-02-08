@@ -3,7 +3,10 @@ import {
   defineNuxtModule,
   createResolver,
   addComponentsDir,
-  addServerHandler, addPlugin,
+  addServerHandler,
+  addPlugin,
+  addImportsDir,
+  installModule,
 } from '@nuxt/kit';
 import {type ContextConfigurationItem} from '@antify/context';
 
@@ -19,21 +22,26 @@ export default defineNuxtModule<ModuleOptions>({
     configKey: moduleKey,
   },
   async setup(options, nuxt) {
+    // TODO:: check options + default values
     const {resolve} = createResolver(import.meta.url);
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url));
 
-    nuxt.options.runtimeConfig.antNote = options;
+    console.log(options);
+    nuxt.options.runtimeConfig[moduleKey] = options;
+
+    await installModule('@pinia/nuxt')
 
     await addComponentsDir({
       path: resolve('./runtime/components'),
-      prefix: 'ExampleModule'
+      prefix: 'ExampleModule',
+
     });
 
     addPlugin(resolve(runtimeDir, 'plugins/cars'));
-
-    nuxt.hook('imports:dirs', (dirs) => {
-      dirs.push(resolve(runtimeDir, 'composables'));
-    });
+    addImportsDir(resolve(runtimeDir, 'composables'));
+    // nuxt.hook('imports:dirs', (dirs) => {
+    //   dirs.push(resolve(runtimeDir, 'composables'));
+    // });
 
     addServerHandler({
       route: '/api/components/cars/car-table/duplicate/:carId',

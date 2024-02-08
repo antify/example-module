@@ -1,55 +1,45 @@
 <script setup lang="ts">
-import {computed} from "vue";
+import {computed, useRoute, onMounted} from "#imports";
+import {
+  useCarRoutingStore,
+  useCarDetailStore
+} from "../../stores/car";
 
-const {$cars} = useNuxtApp();
-const {
-  executeRead,
-  resetData,
-  isCreateContext,
-  data,
-  skeleton,
-  save,
-  saveAndNew,
-  formDisabled,
-  executeDelete,
-  validator,
-} = $cars.item
-const {
-  goToListingPage
-} = $cars.routing
-const carId = useRoute().params?.carId;
-const ui = useUi()
+const carRoutingStore = useCarRoutingStore();
+const carDetailStore = useCarDetailStore();
 const route = useRoute()
-
+const carId = carRoutingStore.routing.getEntityId();
+const ui = useUi()
+// TODO:: alles auf carStore umbauen
 const tabItems = computed(() => ([
   {
-    // TODO:: remove id if #11 is solved
+    // TODO:: remove id if @antify/ui-module #11 is solved
     id: 'main-data',
     label: 'Main data',
-    to: {name: 'cars-carId', params: {carId: carId}, query: route.query},
-    colorType: validator.hasErrors('client-main-data') ? ui.TabItemColorType.danger : ui.TabItemColorType.base
+    to: carRoutingStore.routing.getDetailRoute(carId),
+    colorType: carDetailStore.validator.hasErrors('client-main-data') ? ui.TabItemColorType.danger : ui.TabItemColorType.base
   }, {
     id: 'engine',
     label: 'Engine',
-    to: {name: 'cars-carId-engine', params: {carId: carId}, query: route.query},
-    colorType: validator.hasErrors('client-engine') ? ui.TabItemColorType.danger : ui.TabItemColorType.base
+    to: carRoutingStore.routing.getDetailSubRoute(carId, 'engine'),
+    colorType: carDetailStore.validator.hasErrors('client-engine') ? ui.TabItemColorType.danger : ui.TabItemColorType.base
   }, {
     id: 'owners',
     label: 'Owners',
-    to: {name: 'cars-carId-owners', params: {carId: carId}, query: route.query},
+    to: carRoutingStore.routing.getDetailSubRoute(carId, 'owners'),
   }, {
     id: 'damages',
     label: 'Damages',
-    to: {name: 'cars-carId-damages', params: {carId: carId}, query: route.query},
+    to: carRoutingStore.routing.getDetailSubRoute(carId, 'damages'),
   },
 ]))
 
 onMounted(() => {
-  if (isCreateContext.value) {
-    resetData()
-  } else if (carId !== data.value.id) {
-    resetData()
-    executeRead()
+  if (carRoutingStore.routing.isCreatePage.value) {
+    carDetailStore.resetData()
+  } else if (carId !== carDetailStore.entity._id) {
+    carDetailStore.resetData()
+    carDetailStore.executeRead()
   }
 })
 </script>
@@ -59,29 +49,31 @@ onMounted(() => {
     <template #header>
       <AntCrudDetailNav
         :tab-items="tabItems"
-        :get-entity-name="() => `${data.manufacturer} ${data.model}`"
-        :disabled="formDisabled"
-        @delete="() => executeDelete(data.id as string)"
+        :get-entity-name="() => `${carDetailStore.entity.manufacturer} ${carDetailStore.entity.model}`"
+        :disabled="carDetailStore.formDisabled"
+        @delete="() => carDetailStore.executeDelete(carDetailStore.entity._id as string)"
       />
     </template>
 
-    <slot/>
+    <slot />
 
     <template #footer>
       <AntCrudDetailActions
-        :skeleton="skeleton"
-        :disabled="formDisabled"
-        @back="goToListingPage"
-        @save="save"
-        @save-and-new="saveAndNew"
+        :skeleton="carDetailStore.skeleton"
+        :disabled="carDetailStore.formDisabled"
+        @back="() => carRoutingStore.routing.goToListingPage()"
+        @save="() => carDetailStore.save()"
+        @save-and-new="() => carDetailStore.saveAndNew()"
       >
         <template #before-buttons-right>
           <AntButton
-            v-if="$route.name === 'cars-carId-engine'"
-            :skeleton="skeleton"
-            :disabled="formDisabled"
+            v-if="$route.name === 'cockpit-cars-carId-engine'"
+            :skeleton="carDetailStore.skeleton"
+            :disabled="carDetailStore.formDisabled"
             filled
-          >Print engine details</AntButton>
+          >
+            Print engine details
+          </AntButton>
         </template>
       </AntCrudDetailActions>
     </template>

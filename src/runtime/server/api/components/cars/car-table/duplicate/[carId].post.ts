@@ -1,36 +1,29 @@
-import {type Car} from "~/src/runtime/glue/plugins/car";
+import {type Car} from "../../../../../../glue/plugins/car";
+import {getDatabaseClientFromRequest} from "@antify/context";
+import {extendSchemas} from "../../../../../datasources/db/car.extensions";
 
 export default defineEventHandler(async (event) => {
-  const carIdToDuplicate = event.context.params.carId;
+  // TODO:: check authorization
 
-  const storage = useStorage('db');
-  const cars = (await storage.getItem<Car[]>('cars')) || [];
-  const index = cars.findIndex((car) => car.id === carIdToDuplicate);
+  const contextConfig = useRuntimeConfig().exampleModule.providers;
+  const client = await getDatabaseClientFromRequest(
+    event,
+    contextConfig,
+    extendSchemas
+  );
+  const CarModel = client.getModel<Car>('cars');
+  const car = await CarModel.findOne({_id: event.context.params!.carId});
 
-  if (index === -1) {
+  if (!car) {
     return {
       notFound: true
     }
   }
 
-  const newCar = {
-    id: (() => {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        // eslint-disable-next-line no-bitwise
-        const r = (Math.random() * 16) | 0;
-        // eslint-disable-next-line no-bitwise
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      });
-    })(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    ...cars[index]
-  }
+  car.isNew = true;
+  car._id = undefined;
 
-  cars.push(newCar);
+  await car.save();
 
-  await storage.setItem('cars', cars);
-
-  return {id: newCar.id};
+  return {_id: car._id};
 });

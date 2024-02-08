@@ -4,6 +4,19 @@ export default defineNuxtConfig({
     '@antify/ui-module',
     // '@antify/dev-module'
   ],
+  ssr: false,
+  exampleModule: {
+    providers: [
+      {
+        id: 'core',
+        isSingleTenancy: true,
+      },
+      {
+        id: 'tenant',
+        isSingleTenancy: false,
+      },
+    ],
+  },
   nitro: {
     storage: {
       db: {

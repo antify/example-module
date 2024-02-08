@@ -25,15 +25,17 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@antify/ant-database": "file:../antify/packages/ant-database",
     "@antify/ant-guard": "file:../antify/packages/ant-guard",
-    "@antify/context": "file:../antify/packages/context",
-    "@antify/kit": "file:../antify/packages/kit",
+    "@antify/context": "file:../context",
+    "@antify/database": "file:../database",
     "@antify/validate": "1.14.0",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
-    "@nuxt/kit": "^3.8.2"
+    "@nuxt/kit": "^3.8.2",
+    "@pinia/nuxt": "^0.5.1",
+    "pinia": "^2.1.7"
   },
   "devDependencies": {
+    "@antify/database-cli": "file:../database-cli",
     "@faker-js/faker": "^8.3.1",
     "@nuxt/eslint-config": "^0.2.0",
     "@nuxt/module-builder": "^0.5.4",

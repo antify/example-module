@@ -4,11 +4,18 @@ import {
   notBlankRule,
   useValidator,
   isRequiredRule,
-  isUUIDRule
+  isMongoDbObjectIdRule
 } from "@antify/validate"
 
+export type CarListingData = {
+  cars: Car[]
+  count: number
+  colors: string[]
+  types: string[]
+}
+
 export type Car = {
-  id: string | null
+  _id: string | null
   model: string | null
   manufacturer: string | null
   type: string | null
@@ -22,9 +29,9 @@ export type Car = {
 
 // TODO:: Fix type
 export const validator = useValidator<Car>({
-  id: {
-    rules: [(val: any) => isUUIDRule(val)],
-    groups: ['client-put', 'server-put']
+  _id: {
+    rules: [(val: any) => isMongoDbObjectIdRule(val)],
+    groups: ['server-put']
   },
   model: {
     readableName: 'Model',

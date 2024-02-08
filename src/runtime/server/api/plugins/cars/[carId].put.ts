@@ -1,25 +1,35 @@
 import {type Car, validator} from "../../../../glue/plugins/car";
+import {getDatabaseClientFromRequest} from "@antify/context";
+import {extendSchemas} from "../../../datasources/db/car.extensions";
 
 export default defineEventHandler(async (event) => {
+  // TODO:: Authorization
   const body = validator.validate(await readBody(event), 'server-put');
 
   if (validator.hasErrors()) {
     throw new Error(validator.getErrorsAsString());
   }
 
-  const storage = useStorage('db');
-  const cars = (await storage.getItem<Car[]>('cars')) || [];
-  const index = cars.findIndex((car) => car.id === event.context.params?.carId);
+  const contextConfig = useRuntimeConfig().exampleModule.providers;
 
-  if (index === -1) {
+  // TODO:: check authorization
+
+  const client = await getDatabaseClientFromRequest(
+    event,
+    contextConfig,
+    extendSchemas
+  );
+  const CarModel = client.getModel<Car>('cars');
+  const car = await CarModel.findOne({_id: event.context.params!.carId});
+
+  if (!car) {
     return {
       notFound: true
     }
   }
 
-  cars[index] = body;
+  await CarModel.updateOne({_id: event.context.params!.carId}, body);
 
-  await storage.setItem('cars', cars);
+  Object.assign(car, body);
 
-  return cars[index];
 })

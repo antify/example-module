@@ -9,7 +9,11 @@ const navbarItems = [
   }, {
     label: 'Cars',
     icon: faCar,
-    to: '/cars'
+    to: '/cockpit/cars'
+  }, {
+    label: 'Cars per tenant',
+    icon: faCar,
+    to: '/tenants/65b23bf98f24acdf2bdc6f7f/cars'
   }
 ]
 </script>

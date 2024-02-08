@@ -1,12 +1,9 @@
 <script setup lang="ts">
-const {
-  data,
-  skeleton,
-  save,
-  formDisabled,
-  validator,
-} = useNuxtApp().$cars.item
-const engine = validator.fieldMap.engine
+import {useCarDetailStore} from "../../stores/car";
+
+const carDetailStore = useCarDetailStore();
+const fieldMap = carDetailStore.validator.fieldMap
+const engine = fieldMap.engine
 
 // TODO:: test error case
 // watch(updateError, () => useUiClient().handler.handleResponseError(updateError))
@@ -21,35 +18,35 @@ const powerPsErrors = computed(() => ([
 ]))
 
 function validateVolume(val) {
-  engine.volumeInLiter.validator.validate(val, data.value, ['client-put', 'client-post'])
-  engine.powerPsVolumeDependency.validator.validate(data.value.engine.volumeInLiter, data.value)
+  engine.volumeInLiter.validator.validate(val, carDetailStore.entity, ['client-put', 'client-post'])
+  engine.powerPsVolumeDependency.validator.validate(carDetailStore.entity.engine.volumeInLiter, carDetailStore.entity)
 }
 function validatePower(val) {
-  engine.powerPs.validator.validate(val, data.value, ['client-put', 'client-post'])
-  engine.powerPsVolumeDependency.validator.validate(data.value.engine.powerPs, data.value)
+  engine.powerPs.validator.validate(val, carDetailStore.entity, ['client-put', 'client-post'])
+  engine.powerPsVolumeDependency.validator.validate(carDetailStore.entity.engine.powerPs, carDetailStore.entity)
 }
 </script>
 
 <template>
   <div class="p-2.5">
-    <form @submit.prevent="save">
+    <form @submit.prevent="carDetailStore.save">
       <AntFormGroup>
         <AntFormGroup :direction="useUi().Direction.row">
           <AntTextInput
-            v-model="data.engine.type"
-            :label="validator.fieldMap.engine.type.readableName"
-            :skeleton="skeleton"
-            :disabled="formDisabled"
-            :errors="validator.fieldMap.engine.type.validator.getErrors()"
-            @validate="val => validator.fieldMap.engine.type.validator.validate(val, data, ['client-put', 'client-post'])"
+            v-model="carDetailStore.entity.engine.type"
+            :label="engine.type.readableName"
+            :skeleton="carDetailStore.skeleton"
+            :disabled="carDetailStore.formDisabled"
+            :errors="engine.type.validator.getErrors()"
+            @validate="val => engine.type.validator.validate(val, carDetailStore.entity, ['client-put', 'client-post'])"
           />
 
           <AntUnitInput
-            v-model="data.engine.volumeInLiter"
+            v-model="carDetailStore.entity.engine.volumeInLiter"
             unit="Liter"
             :label="engine.volumeInLiter.readableName"
-            :skeleton="skeleton"
-            :disabled="formDisabled"
+            :skeleton="carDetailStore.skeleton"
+            :disabled="carDetailStore.formDisabled"
             :errors="volumeInLiterErrors"
             @validate="validateVolume"
           />
@@ -57,17 +54,17 @@ function validatePower(val) {
 
         <AntFormGroup :direction="useUi().Direction.row">
           <AntUnitInput
-            v-model="data.engine.powerPs"
+            v-model="carDetailStore.entity.engine.powerPs"
             unit="ps"
             :label="engine.powerPs.readableName"
-            :skeleton="skeleton"
-            :disabled="formDisabled"
+            :skeleton="carDetailStore.skeleton"
+            :disabled="carDetailStore.formDisabled"
             description="If volume is less than 3 liter, power must be less than 200 ps."
             :errors="powerPsErrors"
             @validate="validatePower"
           />
 
-          <div class="w-full"></div>
+          <div class="w-full" />
         </AntFormGroup>
       </AntFormGroup>
     </form>
