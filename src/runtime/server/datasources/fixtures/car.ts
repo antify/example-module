@@ -1,14 +1,13 @@
 import { defineFixture } from "@antify/database";
 import {faker} from "@faker-js/faker";
 import {extendSchemas} from "../db/car.extensions";
-import {Car} from "../db/car.schema";
+import {type Car} from "../db/car.schema";
 
 function generate(count: number = 1) {
   const cars = [];
 
   for (let i = 0; i < count; i++) {
     cars.push({
-      id: faker.string.uuid(),
       model: faker.vehicle.model(),
       manufacturer: faker.vehicle.manufacturer(),
       type: faker.vehicle.type(),
@@ -33,7 +32,7 @@ export default defineFixture({
   async load(client) {
     extendSchemas(client);
 
-    await client.getModel<Car>('cars').insertMany(generate(100000));
+    await client.getModel<Car>('cars').insertMany(generate(100));
   },
 
   dependsOn() {

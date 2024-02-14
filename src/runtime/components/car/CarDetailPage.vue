@@ -10,7 +10,6 @@ const carDetailStore = useCarDetailStore();
 const route = useRoute()
 const carId = carRoutingStore.routing.getEntityId();
 const ui = useUi()
-// TODO:: alles auf carStore umbauen
 const tabItems = computed(() => ([
   {
     // TODO:: remove id if @antify/ui-module #11 is solved

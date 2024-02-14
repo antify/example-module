@@ -24,11 +24,14 @@ const navbarItems = [
     logo-route="/"
   >
     <template #logo-image>
-      <img src="~/assets/logo.svg" class="w-full"/>
+      <img
+        src="~/assets/logo.svg"
+        class="w-full"
+      >
     </template>
 
-    <NuxtPage/>
-  </AntNavLeftLayout>
+    <NuxtPage />
 
-  <AntToaster/>
+    <AntToaster />
+  </AntNavLeftLayout>
 </template>

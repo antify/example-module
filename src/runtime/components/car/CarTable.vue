@@ -133,6 +133,7 @@ function duplicateEntity(id: string) {
           :icon-left="faCopy"
           :size="ui.Size.sm"
           filled
+          data-e2e="duplicate-button"
           @click="() => duplicateEntity(element._id)"
         />
 
@@ -140,6 +141,7 @@ function duplicateEntity(id: string) {
           :to="carRoutingStore.routing.getDetailRoute(element._id)"
           :icon-left="faPencil"
           :size="ui.Size.sm"
+          data-e2e="edit-button"
           filled
         />
 
@@ -147,6 +149,7 @@ function duplicateEntity(id: string) {
           :icon-left="faTrash"
           :size="ui.Size.sm"
           filled
+          data-e2e="delete-button"
           @click="() => openDeleteEntity(element)"
         />
       </div>

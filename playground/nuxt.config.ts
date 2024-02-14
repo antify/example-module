@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     // '@antify/dev-module'
   ],
   ssr: false,
+  devtools: false,
   exampleModule: {
     providers: [
       {

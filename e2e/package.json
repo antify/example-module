@@ -1,0 +1,9 @@
+{
+  "name": "@antify/example-module-e2e-tests",
+  "scripts": {
+    "cy:open": "cypress open"
+  },
+  "dependencies": {
+    "cypress": "^13.6.4"
+  }
+}

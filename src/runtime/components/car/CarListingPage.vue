@@ -18,9 +18,9 @@ const carContextStore = useCarContextStore();
 const carDetailStore = useCarDetailStore();
 const carListingStore = useCarListingStore();
 
+carRoutingStore.options = props
 carContextStore.provider = props.provider
 carContextStore.tenantId = props.tenantId
-carRoutingStore.options = props
 
 const route = useRoute();
 const uiClient = useUiClient();

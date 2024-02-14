@@ -105,6 +105,7 @@ export const useCarRoutingStore = defineStore('car-routing', () => {
 
 export const useCarDetailStore = defineStore('car-detail', () => {
   const route = useRoute();
+  const router = useRouter();
   const nuxtApp = useNuxtApp();
   const uiClient = useUiClient();
   const {headers} = storeToRefs(useCarContextStore());
@@ -130,13 +131,13 @@ export const useCarDetailStore = defineStore('car-detail', () => {
     pending: readPending,
     execute: executeRead,
   } = useFetch(
-    () => `/api/plugins/cars/${route.params.carId}`,
+    () => `/api/plugins/cars/${router.currentRoute.value.params.carId}`,
     {
       headers,
       immediate: false,
       watch: false,
       async onResponse({response}) {
-        await uiClient.handler.handleNotFoundResponse(response, '/cars')
+        await uiClient.handler.handleNotFoundResponse(response, routingStore.routing.getListingRoute())
 
         if (response.status === 200) {
           entity.value = response._data
@@ -149,7 +150,7 @@ export const useCarDetailStore = defineStore('car-detail', () => {
     status: updateStatus,
     execute: executeUpdate,
   } = useFetch(
-    () => `/api/plugins/cars/${route.params.carId}`,
+    () => `/api/plugins/cars/${router.currentRoute.value.params.carId}`,
     {
       headers,
       method: "put",
@@ -157,7 +158,7 @@ export const useCarDetailStore = defineStore('car-detail', () => {
       immediate: false,
       watch: false,
       async onResponse({response}) {
-        await uiClient.handler.handleNotFoundResponse(response, '/cars')
+        await uiClient.handler.handleNotFoundResponse(response, routingStore.routing.getListingRoute())
 
         if (response.status === 200) {
           entity.value = response._data
@@ -170,7 +171,7 @@ export const useCarDetailStore = defineStore('car-detail', () => {
     status: createStatus,
     execute: executeCreate,
   } = useFetch(
-    () => `/api/plugins/cars/${route.params.carId}`,
+    () => `/api/plugins/cars/${router.currentRoute.value.params.carId}`,
     {
       headers,
       method: "post",
@@ -178,7 +179,7 @@ export const useCarDetailStore = defineStore('car-detail', () => {
       immediate: false,
       watch: false,
       async onResponse({response}) {
-        await uiClient.handler.handleNotFoundResponse(response, '/cars')
+        await uiClient.handler.handleNotFoundResponse(response, routingStore.routing.getListingRoute())
 
         if (response.status === 200) {
           entity.value = response._data
