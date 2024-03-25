@@ -1,6 +1,19 @@
-import {Client} from '@antify/database';
+import {defineSchema} from '@antify/database';
 
-export const extendSchemas = (client: Client) => {
+export type Car = {
+  _id: string
+  model: string
+  manufacturer: string
+  type: string
+  color: string
+  engine: {
+    type: string
+    volumeInLiter: number
+    powerPs: number
+  }
+};
+
+export default defineSchema(async (client) => {
   client.getSchema('cars').add({
     model: {
       type: String,
@@ -33,4 +46,4 @@ export const extendSchemas = (client: Client) => {
       }
     }
   });
-};
+});

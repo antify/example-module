@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {computed, useRoute, onMounted} from "#imports";
+import {computed, useRoute, onMounted} from '#imports';
 import {
   useCarRoutingStore,
   useCarDetailStore
-} from "../../stores/car";
+} from '../../stores/car';
 
 const carRoutingStore = useCarRoutingStore();
 const carDetailStore = useCarDetailStore();
@@ -49,7 +49,7 @@ onMounted(() => {
       <AntCrudDetailNav
         :tab-items="tabItems"
         :get-entity-name="() => `${carDetailStore.entity.manufacturer} ${carDetailStore.entity.model}`"
-        :disabled="carDetailStore.formDisabled"
+        :delete-button-disabled="carDetailStore.formDisabled"
         @delete="() => carDetailStore.executeDelete(carDetailStore.entity._id as string)"
       />
     </template>

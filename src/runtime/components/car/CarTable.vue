@@ -1,20 +1,19 @@
 <script lang="ts" setup>
 // import type {TableHeader} from "@antify/ui-module";
-import {faCopy, faPencil, faTrash} from "@fortawesome/free-solid-svg-icons";
-import {type Car} from "../../glue/plugins/car";
-import {useFetch} from "nuxt/app";
-import {useCarListingStore, useCarRoutingStore, useCarDetailStore, useCarContextStore} from "../../stores/car";
-import {watch, onMounted, ref, useNuxtApp, useRoute, computed} from "#imports";
-import {storeToRefs} from "pinia";
+import {type Car} from '../../glue/stores/car';
+import {useFetch} from 'nuxt/app';
+import {useCarListingStore, useCarRoutingStore, useCarDetailStore, useCarContextStore} from '../../stores/car';
+import {watch, onMounted, ref, useNuxtApp, useRoute, computed} from '#imports';
+import {storeToRefs} from 'pinia';
 
 defineProps<{
   showLightVersion: boolean
 }>();
 
-const carDetailStore = useCarDetailStore();
-const carRoutingStore = useCarRoutingStore();
-const carListingStore = useCarListingStore();
-const carContextStore = useCarContextStore();
+const detailStore = useCarDetailStore();
+const routingStore = useCarRoutingStore();
+const listingStore = useCarListingStore();
+const contextStore = useCarContextStore();
 const {headers} = storeToRefs(useCarContextStore());
 const {$uiModule} = useNuxtApp();
 // const carCrud = useCarCrud().value;
@@ -64,10 +63,10 @@ const tableHeaders = [
     type: ui.AntTableRowTypes.slot,
   },
 ];
-const selectedRow = computed(() => route.params.carId ? carListingStore.data?.cars?.find((car) => car._id === route.params.carId) : undefined);
+const selectedRow = computed(() => route.params.carId ? listingStore.data?.cars?.find((car) => car._id === route.params.carId) : undefined);
 const cars = computed(() => {
-  return carListingStore.data?.cars?.map((car) => {
-    car.link = carRoutingStore.routing.getDetailRoute(car._id);
+  return listingStore.data?.cars?.map((car) => {
+    car.link = routingStore.routing.getDetailRoute(car._id);
 
     return car;
   }) || [];
@@ -81,21 +80,22 @@ const {
   () => `/api/components/cars/car-table/duplicate/${entityIdToDuplicate.value}`,
   {
     method: 'post',
-    headers: carContextStore.headers,
+    headers: contextStore.headers,
     immediate: false,
     watch: false,
     onResponse({response}) {
       if (response.status === 200) {
-        carRoutingStore.routing.goToDetailPage(response._data._id);
-        carListingStore.refresh(false);
+        routingStore.routing.goToDetailPage(response._data._id);
+        listingStore.refresh(false);
         $uiModule.toaster.toastDuplicated();
       }
     }
   }
 )
 
-onMounted(() => carListingStore.execute());
+onMounted(() => listingStore.execute());
 
+// TODO:: handle in useFetch response cb
 watch(duplicateError, () => useUiClient().handler.handleResponseError(duplicateError));
 
 function openDeleteEntity(entity: Car) {
@@ -105,7 +105,7 @@ function openDeleteEntity(entity: Car) {
 
 async function deleteEntity() {
   if (entityToDelete.value?._id) {
-    await carDetailStore.executeDelete(entityToDelete.value._id);
+    await detailStore.executeDelete(entityToDelete.value._id);
     entityToDelete.value = null;
   }
 }
@@ -121,7 +121,7 @@ function duplicateEntity(id: string) {
     :selected-row="selectedRow"
     :data="cars"
     :headers="tableHeaders"
-    :loading="carListingStore.pending || carDetailStore.deleteStatus === 'pending' || duplicateStatus === 'pending'"
+    :loading="listingStore.pending || detailStore.deleteStatus === 'pending' || duplicateStatus === 'pending'"
     :show-light-version="showLightVersion"
   >
     <template #cellContent="{header, element}">
@@ -129,27 +129,21 @@ function duplicateEntity(id: string) {
         v-if="header.identifier === 'actions'"
         class="flex justify-end gap-2.5"
       >
-        <AntButton
-          :icon-left="faCopy"
+        <AntDuplicateButton
+          icon-variant
           :size="ui.Size.sm"
-          filled
-          data-e2e="duplicate-button"
           @click="() => duplicateEntity(element._id)"
         />
 
-        <AntButton
-          :to="carRoutingStore.routing.getDetailRoute(element._id)"
-          :icon-left="faPencil"
+        <AntEditButton
+          icon-variant
+          :to="routingStore.routing.getDetailRoute(element._id)"
           :size="ui.Size.sm"
-          data-e2e="edit-button"
-          filled
         />
 
-        <AntButton
-          :icon-left="faTrash"
+        <AntDeleteButton
+          icon-variant
           :size="ui.Size.sm"
-          filled
-          data-e2e="delete-button"
           @click="() => openDeleteEntity(element)"
         />
       </div>

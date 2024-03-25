@@ -1,12 +1,12 @@
-import {isAuthorizedHandler} from '#auth-module';
-import {type Car} from '../../../../../../glue/stores/car';
-import {PermissionId} from '../../../../../../glue/permissions';
+import {type Car} from '../../../../glue/stores/car';
 import {getContext, useDatabaseClient} from '#database-module';
+import {isAuthorizedHandler} from '#auth-module';
+import {PermissionId} from '../../../../glue/permissions';
 
 export default defineEventHandler(async (event) => {
 	const {provider, tenantId} = getContext(event);
 
-	await isAuthorizedHandler(event, PermissionId.CAN_CREATE_CAR, provider, tenantId);
+	await isAuthorizedHandler(event, PermissionId.CAN_READ_CAR, provider, tenantId);
 
   const client = await useDatabaseClient(event);
   const CarModel = client.getModel<Car>('cars');
@@ -18,10 +18,5 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  car.isNew = true;
-  car._id = undefined;
-
-  await car.save();
-
-  return {_id: car._id};
-});
+  return car
+})

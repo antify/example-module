@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {useRoute} from 'vue-router';
 // import {type SelectOption} from "@antify/ui-module";
 import {useRouteQuery} from '@vueuse/router';
 import CarTable from './CarTable.vue';
@@ -9,18 +8,22 @@ import {
   useCarRoutingStore,
   useCarContextStore,
   useCarDetailStore
-} from "../../stores/car";
-import {watch, computed} from "#imports";
+} from '../../stores/car';
+import {
+	watch,
+	computed,
+	useRoute
+} from '#imports';
 
 const props = defineProps<CrudOptions>();
-const carRoutingStore = useCarRoutingStore();
-const carContextStore = useCarContextStore();
-const carDetailStore = useCarDetailStore();
-const carListingStore = useCarListingStore();
+const routingStore = useCarRoutingStore();
+const contextStore = useCarContextStore();
+const detailStore = useCarDetailStore();
+const listingStore = useCarListingStore();
 
-carRoutingStore.options = props
-carContextStore.provider = props.provider
-carContextStore.tenantId = props.tenantId
+routingStore.options = props;
+contextStore.provider = props.provider;
+contextStore.tenantId = props.tenantId;
 
 const route = useRoute();
 const uiClient = useUiClient();
@@ -44,25 +47,26 @@ const filterType = useRouteQuery<string | null>('type', null, {
 //   value: color
 // })))
 
-const filterColorOptions = computed(() => carListingStore.allColors.map((color) => ({
+const filterColorOptions = computed(() => listingStore.allColors.map((color) => ({
   label: color,
   value: color
 })))
-const filterTypeOptions = computed(() => carListingStore.allTypes.map((color) => ({
+const filterTypeOptions = computed(() => listingStore.allTypes.map((color) => ({
   label: color,
   value: color
 })))
 
 watch(() => route.query, (to, from) => {
   if (uiClient.utils.queryChanged(from, to, ['color', 'type'])) {
-    carListingStore.refresh();
+    listingStore.refresh();
   }
 })
-watch(() => carListingStore.error, (val) => uiClient.handler.handleResponseError(val));
-watch(() => carDetailStore.readError, (val) => uiClient.handler.handleResponseError(val))
-watch(() => carDetailStore.createError, (val) => uiClient.handler.handleResponseError(val))
-watch(() => carDetailStore.updateError, (val) => uiClient.handler.handleResponseError(val))
-watch(() => carDetailStore.deleteError, (val) => uiClient.handler.handleResponseError(val))
+// TODO:: move to store
+watch(() => listingStore.error, (val) => uiClient.handler.handleResponseError(val));
+watch(() => detailStore.readError, (val) => uiClient.handler.handleResponseError(val))
+watch(() => detailStore.createError, (val) => uiClient.handler.handleResponseError(val))
+watch(() => detailStore.updateError, (val) => uiClient.handler.handleResponseError(val))
+watch(() => detailStore.deleteError, (val) => uiClient.handler.handleResponseError(val))
 
 function resetFilters() {
   filterColor.value = null;
@@ -71,14 +75,14 @@ function resetFilters() {
 </script>
 
 <template>
-  <AntCrud :show-detail="carRoutingStore.routing.isDetailPage.value">
+  <AntCrud :show-detail="routingStore.routing.isDetailPage.value">
     <template #search-section>
       <AntCrudTableFilter
-        :full-width="carRoutingStore.routing.isListingPage.value"
+        :full-width="routingStore.routing.isListingPage.value"
         :has-filter="filterColor !== null || filterType !== null"
-        :skeleton="carListingStore.skeleton"
-        @search="() => carListingStore.refresh()"
-        @create="() => carRoutingStore.routing.goToDetailPage()"
+        :skeleton="listingStore.skeleton"
+        @search="() => listingStore.refresh()"
+        @create="() => routingStore.routing.goToDetailPage()"
         @remove-filter="() => resetFilters()"
       >
         <template #dropdownContent>
@@ -103,16 +107,16 @@ function resetFilters() {
     </template>
 
     <template #table-section>
-      <CarTable :show-light-version="carRoutingStore.routing.isDetailPage.value" />
+      <CarTable :show-light-version="routingStore.routing.isDetailPage.value" />
     </template>
 
     <template #table-nav-section>
       <AntCrudTableNav
-        :count="carListingStore.count"
-        :full-width="carRoutingStore.routing.isListingPage.value"
-        :skeleton="carListingStore.skeleton"
-        @change-items-per-page="() => carListingStore.refresh()"
-        @change-page="() => carListingStore.refresh(false)"
+        :count="listingStore.count"
+        :full-width="routingStore.routing.isListingPage.value"
+        :skeleton="listingStore.skeleton"
+        @change-items-per-page="() => listingStore.refresh()"
+        @change-page="() => listingStore.refresh(false)"
       />
     </template>
 

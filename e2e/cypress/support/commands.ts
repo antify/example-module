@@ -43,7 +43,7 @@ Cypress.Commands.add('loadFixtures', () => {
 });
 
 Cypress.Commands.add('truncateCars', () => {
-  cy.exec('cd ../ && pnpm db truncate core --collections=cars')
+  cy.exec('cd ../ && pnpm db truncate core --collections=cars', {timeout: 10000, log: true})
     .its('stderr')
     .should('eq', '');
 });

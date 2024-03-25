@@ -5,9 +5,18 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@antify/codex':
+    specifier: file:../../codex
+    version: file:../../codex
+  '@antify/ui-test-utils':
+    specifier: file:../../ui-test-utils
+    version: file:../../ui-test-utils(@antify/codex@1.0.0)(cypress@13.6.4)
   cypress:
     specifier: ^13.6.4
     version: 13.6.4
+  typescript:
+    specifier: ^5.3.3
+    version: 5.3.3
 
 packages:
 
@@ -1140,6 +1149,12 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
+  /typescript@5.3.3:
+    resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: false
+
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
     requiresBuild: true
@@ -1221,4 +1236,21 @@ packages:
     dependencies:
       buffer-crc32: 0.2.13
       fd-slicer: 1.1.0
+    dev: false
+
+  file:../../codex:
+    resolution: {directory: ../../codex, type: directory}
+    name: '@antify/codex'
+    dev: false
+
+  file:../../ui-test-utils(@antify/codex@1.0.0)(cypress@13.6.4):
+    resolution: {directory: ../../ui-test-utils, type: directory}
+    id: file:../../ui-test-utils
+    name: '@antify/ui-test-utils'
+    peerDependencies:
+      '@antify/codex': file:../codex
+      cypress: ^13.6.4
+    dependencies:
+      '@antify/codex': file:../../codex
+      cypress: 13.6.4
     dev: false

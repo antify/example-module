@@ -33,5 +33,6 @@ const navbarItems = [
     <NuxtPage />
 
     <AntToaster />
+    <AntAuthJWTHelper />
   </AntNavLeftLayout>
 </template>
