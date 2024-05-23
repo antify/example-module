@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
 	if (queryValidator.hasErrors()) {
 		throw new Error(queryValidator.getErrorsAsString());
 	}
-console.log(appId, tenantId);
+
 	const client = await useDatabaseClient(appId, tenantId);
 	const query = getQuery(event);
 	const filter: FilterQuery<Car> = {};
