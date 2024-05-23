@@ -3,7 +3,7 @@
 
 <template>
   <ExampleModuleCarDetailEnginePage>
-    <NuxtPage/>
+    <NuxtPage />
   </ExampleModuleCarDetailEnginePage>
 </template>
 

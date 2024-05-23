@@ -1,15 +1,16 @@
 import {type Car} from '../../../../glue/stores/car';
 import {defineEventHandler} from '#imports';
-import {getContext, useDatabaseClient} from '#database-module';
+import {useDatabaseClient} from '#database-module';
 import {isAuthorizedHandler} from '#authorization-module';
 import {PermissionId} from '../../../../glue/permissions';
+import {isValidAppContextHandler} from '#app-context-module';
 
 export default defineEventHandler(async (event) => {
-	const {provider, tenantId} = getContext(event);
+	const {appId, tenantId} = isValidAppContextHandler(event);
 
-	await isAuthorizedHandler(event, PermissionId.CAN_READ_CAR, provider, tenantId);
+	await isAuthorizedHandler(event, PermissionId.CAN_READ_CAR);
 
-  const client = await useDatabaseClient(event);
+  const client = await useDatabaseClient(appId, tenantId);
   const CarModel = client.getModel<Car>('cars');
   const car = await CarModel.findOne({_id: event.context.params!.carId});
 

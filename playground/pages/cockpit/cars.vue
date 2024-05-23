@@ -5,13 +5,12 @@ const detailRouteName = 'cockpit-cars-carId';
 
 <template>
   <ExampleModuleCarListingPage
-    provider="core"
-    :listingRouteName="listingRouteName"
-    :detailRouteName="detailRouteName"
-    :entityIdentifier="'carId'"
-    :getDetailRoute="(carId) => ({ name: detailRouteName, params: { carId } })"
-    :getListingRoute="() => ({ name: listingRouteName })"
+    :listing-route-name="listingRouteName"
+    :detail-route-name="detailRouteName"
+    :entity-identifier="'carId'"
+    :get-detail-route="(carId) => ({ name: detailRouteName, params: { carId } })"
+    :get-listing-route="() => ({ name: listingRouteName })"
   >
-    <NuxtPage/>
+    <NuxtPage />
   </ExampleModuleCarListingPage>
 </template>

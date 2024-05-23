@@ -5,7 +5,6 @@ import CarTable from './CarTable.vue';
 import {
 	useCarListingStore,
 	useCarRoutingStore,
-	useCarContextStore
 } from '../../stores/car';
 import {
 	watch,
@@ -16,8 +15,6 @@ import {
 import type {RouteParams} from 'vue-router';
 
 const props = defineProps<{
-	provider?: string
-	tenantId?: string
 	detailRouteName: string
 	listingRouteName: string
 	getDetailRouteParams?: () => RouteParams,
@@ -26,12 +23,9 @@ const props = defineProps<{
 	createEntityIdentifier?: string
 }>();
 const routingStore = useCarRoutingStore();
-const contextStore = useCarContextStore();
 const listingStore = useCarListingStore();
 
 routingStore.options = props;
-contextStore.provider = props.provider;
-contextStore.tenantId = props.tenantId;
 
 const route = useRoute();
 const uiClient = useUiClient();

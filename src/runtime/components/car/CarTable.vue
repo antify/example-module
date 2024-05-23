@@ -5,7 +5,6 @@ import {
 	useCarListingStore,
 	useCarRoutingStore,
 	useCarDetailStore,
-	useCarContextStore
 } from '../../stores/car';
 import {
 	onMounted,
@@ -15,7 +14,9 @@ import {
 	computed,
 	useUi,
 	showError,
-	useFetch
+	useFetch,
+	useUiClient,
+	useAuthResponseErrorHandler
 } from '#imports';
 
 defineProps<{
@@ -25,10 +26,10 @@ defineProps<{
 const detailStore = useCarDetailStore();
 const routingStore = useCarRoutingStore();
 const listingStore = useCarListingStore();
-const contextStore = useCarContextStore();
 const {$uiModule} = useNuxtApp();
 const route = useRoute();
 const ui = useUi();
+const uiClient = useUiClient();
 const deleteDialogOpen = ref(false);
 const entityToDelete = ref<Car | null>(null);
 // const tableHeaders: TableHeader[] = [
@@ -78,15 +79,18 @@ const {
 	() => `/api/components/cars/car-table/duplicate/${entityIdToDuplicate.value}`,
 	{
 		method: 'post',
-		headers: contextStore.headers,
 		immediate: false,
 		watch: false,
-		onResponse({response}) {
+		async onResponse({response}) {
+			useAuthResponseErrorHandler(response);
+
 			switch (response.status) {
 				case 500:
 					showError(response._data);
 					break;
 				case 200:
+					await uiClient.handler.handleNotFoundResponse(response, routingStore.routing.getListingRoute());
+
 					routingStore.routing.goToDetailPage(response._data._id);
 					listingStore.refresh(false);
 					$uiModule.toaster.toastDuplicated();

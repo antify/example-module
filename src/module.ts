@@ -6,34 +6,31 @@ import {
 	addImportsDir,
 	installModule
 } from '@nuxt/kit';
+// TODO:: add own permissions to global permissions
 import {permissions} from './runtime/glue/permissions';
 
 type ModuleOptions = {};
 
-const moduleKey = 'exampleModule';
-
 export default defineNuxtModule<ModuleOptions>({
 	meta: {
-		name: 'example-module', // TODO:: <- just use moduleKey as well?
-		configKey: moduleKey,
+		name: 'example-module',
+		configKey: 'exampleModule',
 	},
 	async setup(options, nuxt) {
 		// TODO:: check options + default values
 		const {resolve} = createResolver(import.meta.url);
 		const runtimeDir = resolve('runtime');
 
-		nuxt.options.runtimeConfig[moduleKey] = options;
-
 		// TODO:: what if an other module already installed it?
 		await installModule('@pinia/nuxt')
-		await installModule('@antify/database-module')
 
-		// TODO:: check if authorization-module module is installed
-		await installModule('@antify/authorization-module', {permissions})
+		// TODO:: check if authorization and database-module module is activated in nuxt config
 
 		await addComponentsDir({
 			path: resolve(runtimeDir, 'components'),
 			prefix: 'ExampleModule',
+			pathPrefix: false,
+			global: true
 		});
 
 		addImportsDir(resolve(runtimeDir, 'composables'));

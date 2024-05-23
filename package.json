@@ -21,16 +21,11 @@
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
     "release": "standard-version && pnpm publish && git push --follow-tags",
-    "lint": "eslint .",
-    "e2e": "e2e/cypress open"
+    "lint": "eslint ."
   },
   "dependencies": {
-    "@antify/authorization-module": "file:../authorization-module",
-    "@antify/database": "^1.2.0",
-    "@antify/database-module": "^1.1.0",
     "@antify/validate": "1.14.0",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
-    "@nuxt/kit": "^3.10.3",
     "@pinia/nuxt": "^0.5.1",
     "pinia": "^2.1.7"
   },
@@ -42,10 +37,15 @@
     "@nuxt/schema": "^3.10.3",
     "eslint": "^8.57.0",
     "eslint-plugin-storybook": "^0.8.0",
-    "nuxt": "^3.10.3",
     "standard-version": "^9.5.0"
   },
   "peerDependencies": {
-    "@antify/ui-module": "^1.6.0"
-  }
+		"@antify/authorization-module": "file:../authorization-module",
+		"@antify/app-context-module": "^1.2.0",
+		"@antify/database": "^1.2.0",
+		"@antify/database-module": "^1.2.0",
+    "@antify/ui-module": "^1.6.0",
+		"@nuxt/kit": "^3.10.3",
+		"nuxt": "^3.10.3"
+	}
 }

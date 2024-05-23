@@ -1,56 +1,33 @@
 import {type LocationQueryRaw, type RouteParams} from 'vue-router';
 import {type Car, validator} from '../glue/stores/car';
 import {
-	useFetch,
-	useRouter,
-	useRoute,
-	useNuxtApp,
 	ref,
+	useFetch,
+	useRoute,
 	reactive,
 	computed,
+	useRouter,
 	showError,
-	useUiClient
+	useNuxtApp,
+	useUiClient,
+	useAuthResponseErrorHandler
 } from '#imports';
 import {defineStore, storeToRefs} from 'pinia';
-
-export type CrudOptions = {
-	provider?: string
-	tenantId?: string
-} & CrudRoutingOptions;
-
-export const useCarContextStore = defineStore('car-context', () => {
-	const {$databaseModule} = useNuxtApp();
-	const provider = ref<string | undefined>(undefined)
-	const tenantId = ref<string | undefined>(undefined)
-	const headers = computed(() => {
-		if (!provider.value) {
-			throw new Error('provider is not set. Set useCarContextStore().provider and useCarContextStore().tenantId first.')
-		}
-
-		return $databaseModule.getContextHeaders(provider.value, tenantId.value)
-	})
-
-	return {
-		provider,
-		tenantId,
-		headers
-	}
-});
 
 export const useCarListingStore = defineStore('car-listing', () => {
 	const router = useRouter();
 	const uiClient = useUiClient();
 	const query = computed(() => router.currentRoute.value.query);
-	const {headers} = storeToRefs(useCarContextStore());
 
 	const fetch = useFetch(
 		'/api/stores/car',
 		{
 			query,
-			headers,
 			watch: false,
 			immediate: false,
 			onResponse({response}) {
+				useAuthResponseErrorHandler(response);
+
 				// TODO:: remove if https://github.com/antify/ui-module/issues/45 is implemented
 				if (response.status === 500) {
 					showError(response._data)
@@ -111,7 +88,6 @@ export const useCarDetailStore = defineStore('car-detail', () => {
 	const router = useRouter();
 	const nuxtApp = useNuxtApp();
 	const uiClient = useUiClient();
-	const {headers} = storeToRefs(useCarContextStore());
 	const routingStore = useCarRoutingStore();
 	const {routing} = storeToRefs(routingStore);
 	const listingStore = useCarListingStore();
@@ -136,10 +112,10 @@ export const useCarDetailStore = defineStore('car-detail', () => {
 	} = useFetch(
 		() => `/api/stores/car/${router.currentRoute.value.params.carId}`,
 		{
-			headers,
 			immediate: false,
 			watch: false,
 			async onResponse({response}) {
+				useAuthResponseErrorHandler(response);
 				await uiClient.handler.handleNotFoundResponse(response, routingStore.routing.getListingRoute())
 
 				if (response.status === 200) {
@@ -160,12 +136,12 @@ export const useCarDetailStore = defineStore('car-detail', () => {
 	} = useFetch(
 		() => `/api/stores/car/${router.currentRoute.value.params.carId}`,
 		{
-			headers,
 			method: 'put',
 			body: entity,
 			immediate: false,
 			watch: false,
 			async onResponse({response}) {
+				useAuthResponseErrorHandler(response);
 				await uiClient.handler.handleNotFoundResponse(response, routingStore.routing.getListingRoute())
 
 				if (response.status === 200) {
@@ -186,12 +162,12 @@ export const useCarDetailStore = defineStore('car-detail', () => {
 	} = useFetch(
 		() => `/api/stores/car/${router.currentRoute.value.params.carId}`,
 		{
-			headers,
 			method: 'post',
 			body: entity,
 			immediate: false,
 			watch: false,
 			async onResponse({response}) {
+				useAuthResponseErrorHandler(response);
 				await uiClient.handler.handleNotFoundResponse(response, routingStore.routing.getListingRoute())
 
 				if (response.status === 200) {
@@ -215,11 +191,12 @@ export const useCarDetailStore = defineStore('car-detail', () => {
 	} = useFetch(
 		() => `/api/stores/car/${entityIdToDelete.value}`,
 		{
-			headers,
 			method: 'delete',
 			immediate: false,
 			watch: false,
 			onResponse({response}) {
+				useAuthResponseErrorHandler(response);
+
 				if (response.status === 200) {
 					listingStore.refresh(false);
 					routingStore.routing.goToListingPage();
@@ -304,6 +281,7 @@ export const useCarDetailStore = defineStore('car-detail', () => {
 })
 
 // TODO:: move crud routing to helper (may ui-module?)
+// TODO:: do not use it as store
 export type CrudRoutingOptions = {
 	detailRouteName: string
 	listingRouteName: string

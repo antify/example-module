@@ -1,10 +1,16 @@
 <script lang="ts" setup>
-import {definePageMeta, useRouteGuard} from '#imports';
+import {
+	definePageMeta,
+	useRouteGuard,
+	useAppContext
+} from '#imports';
 
 definePageMeta({
 	middleware: [
 		function () {
-			return useRouteGuard('core', null, 'CAN_READ_CAR');
+			useAppContext().value.setContext('core');
+
+			return useRouteGuard({appId: 'core'}, 'CAN_READ_CAR');
 		}
 	]
 });

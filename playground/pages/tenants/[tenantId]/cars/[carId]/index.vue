@@ -1,5 +1,8 @@
+<script setup lang="ts">
+</script>
+
 <template>
   <ExampleModuleCarDetailMainDataPage>
-    <NuxtPage/>
+    <NuxtPage />
   </ExampleModuleCarDetailMainDataPage>
 </template>
