@@ -5,12 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@antify/codex':
-    specifier: file:../../codex
-    version: file:../../codex
-  '@antify/ui-test-utils':
-    specifier: file:../../ui-test-utils
-    version: file:../../ui-test-utils(@antify/codex@1.0.0)(cypress@13.6.4)
+  '@antify/e2e-test-utils':
+    specifier: file:../../e2e-test-utils
+    version: file:../../e2e-test-utils(cypress@13.6.4)
   cypress:
     specifier: ^13.6.4
     version: 13.6.4
@@ -1238,19 +1235,12 @@ packages:
       fd-slicer: 1.1.0
     dev: false
 
-  file:../../codex:
-    resolution: {directory: ../../codex, type: directory}
-    name: '@antify/codex'
-    dev: false
-
-  file:../../ui-test-utils(@antify/codex@1.0.0)(cypress@13.6.4):
-    resolution: {directory: ../../ui-test-utils, type: directory}
-    id: file:../../ui-test-utils
-    name: '@antify/ui-test-utils'
+  file:../../e2e-test-utils(cypress@13.6.4):
+    resolution: {directory: ../../e2e-test-utils, type: directory}
+    id: file:../../e2e-test-utils
+    name: '@antify/e2e-test-utils'
     peerDependencies:
-      '@antify/codex': file:../codex
       cypress: ^13.6.4
     dependencies:
-      '@antify/codex': file:../../codex
       cypress: 13.6.4
     dev: false
