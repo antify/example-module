@@ -8,7 +8,8 @@ import {
 	ref,
 	reactive,
 	computed,
-	showError
+	showError,
+	useUiClient
 } from '#imports';
 import {defineStore, storeToRefs} from 'pinia';
 

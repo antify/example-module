@@ -1,4 +1,5 @@
 import {type Car} from '../../../../glue/stores/car';
+import {defineEventHandler} from '#imports';
 import {
 	Types,
 	isTypeOfRule,
@@ -7,8 +8,9 @@ import {
 } from '@antify/validate';
 import {type FilterQuery} from 'mongoose';
 import {getContext, useDatabaseClient} from '#database-module';
-import {isAuthorizedHandler} from '#auth-module';
+import {isAuthorizedHandler} from '#authorization-module';
 import {PermissionId} from '../../../../glue/permissions';
+import {getQuery} from '#imports';
 
 export default defineEventHandler(async (event) => {
 	const {provider, tenantId} = getContext(event);

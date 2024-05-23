@@ -1,4 +1,5 @@
-import {isAuthorizedHandler} from '#auth-module';
+import {isAuthorizedHandler} from '#authorization-module';
+import {defineEventHandler} from '#imports';
 import {type Car} from '../../../../../../glue/stores/car';
 import {PermissionId} from '../../../../../../glue/permissions';
 import {getContext, useDatabaseClient} from '#database-module';

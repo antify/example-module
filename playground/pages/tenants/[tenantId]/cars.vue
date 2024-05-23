@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {useRoute, computed} from '#imports'
+
 const listingRouteName = 'tenants-tenantId-cars';
 const detailRouteName = 'tenants-tenantId-cars-carId';
 const route = useRoute();

@@ -1,19 +1,14 @@
-import {fileURLToPath} from 'url';
 import {
 	defineNuxtModule,
 	createResolver,
 	addComponentsDir,
 	addServerHandler,
-	addPlugin,
 	addImportsDir,
-	installModule,
-	addServerPlugin
+	installModule
 } from '@nuxt/kit';
 import {permissions} from './runtime/glue/permissions';
 
-type ModuleOptions = {
-
-};
+type ModuleOptions = {};
 
 const moduleKey = 'exampleModule';
 
@@ -25,7 +20,7 @@ export default defineNuxtModule<ModuleOptions>({
 	async setup(options, nuxt) {
 		// TODO:: check options + default values
 		const {resolve} = createResolver(import.meta.url);
-		const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url));
+		const runtimeDir = resolve('runtime');
 
 		nuxt.options.runtimeConfig[moduleKey] = options;
 
@@ -33,11 +28,11 @@ export default defineNuxtModule<ModuleOptions>({
 		await installModule('@pinia/nuxt')
 		await installModule('@antify/database-module')
 
-		// TODO:: check if auth-module module is installed
-		await installModule('@antify/auth-module', {permissions})
+		// TODO:: check if authorization-module module is installed
+		await installModule('@antify/authorization-module', {permissions})
 
 		await addComponentsDir({
-			path: resolve('./runtime/components'),
+			path: resolve(runtimeDir, 'components'),
 			prefix: 'ExampleModule',
 		});
 
@@ -46,37 +41,37 @@ export default defineNuxtModule<ModuleOptions>({
 		addServerHandler({
 			route: '/api/components/cars/car-table/duplicate/:carId',
 			method: 'post',
-			handler: resolve(runtimeDir, 'server/api/components/cars/car-table/duplicate/[carId].post'),
+			handler: resolve(runtimeDir, 'server', 'api', 'components', 'cars', 'car-table', 'duplicate', '[carId].post'),
 		});
 
 		addServerHandler({
 			route: '/api/stores/car/:carId',
 			method: 'delete',
-			handler: resolve(runtimeDir, 'server/api/stores/car/[carId].delete'),
+			handler: resolve(runtimeDir, 'server', 'api', 'stores', 'car', '[carId].delete'),
 		});
 
 		addServerHandler({
 			route: '/api/stores/car/:carId',
 			method: 'get',
-			handler: resolve(runtimeDir, 'server/api/stores/car/[carId].get'),
+			handler: resolve(runtimeDir, 'server', 'api', 'stores', 'car', '[carId].get'),
 		});
 
 		addServerHandler({
 			route: '/api/stores/car/:carId',
 			method: 'post',
-			handler: resolve(runtimeDir, 'server/api/stores/car/[carId].post'),
+			handler: resolve(runtimeDir, 'server', 'api', 'stores', 'car', '[carId].post'),
 		});
 
 		addServerHandler({
 			route: '/api/stores/car/:carId',
 			method: 'put',
-			handler: resolve(runtimeDir, 'server/api/stores/car/[carId].put'),
+			handler: resolve(runtimeDir, 'server', 'api', 'stores', 'car', '[carId].put'),
 		});
 
 		addServerHandler({
 			route: '/api/stores/car',
 			method: 'get',
-			handler: resolve(runtimeDir, 'server/api/stores/car/index.get'),
+			handler: resolve(runtimeDir, 'server', 'api', 'stores', 'car', 'index.get'),
 		});
 	},
 });

@@ -1,18 +1,16 @@
 export default defineNuxtConfig({
   modules: [
     '../src/module',
-    '@antify/ui-module',
-    // '@antify/database-module',
-    // '@antify/auth-module',
-    // '@antify/dev-module'
+    '@antify/ui-module'
   ],
   ssr: false,
   devtools: {enabled: true},
+	imports: {
+		autoImport: false
+	},
   exampleModule: {},
-	authModule: {
-		databaseHandler: './server/datasources/db/core/database-handler',
+	authorizationModule: {
 		jwtSecret: '#a!SuperSecret123',
-		passwordSalt: '#a!SaveSalt123',
 		permissions: [
 			{
 				id: 'CAN_READ_SECRET_DATA',

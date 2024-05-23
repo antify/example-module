@@ -11,7 +11,7 @@ export default defineDatabaseConfig({
 		schemasDir: [
 			'src/runtime/server/datasources/db/schemas',
 			'playground/server/datasources/db/core/schemas',
-			'node_modules/@antify/auth-module/dist/runtime/server/datasources/schemas'
+			'node_modules/@antify/authorization-module/dist/runtime/server/datasources/schemas'
 		]
 	},
 	tenant: {

@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import {useCarDetailStore} from "../../stores/car";
+import {useCarDetailStore} from '../../stores/car';
+import {computed} from 'vue';
+import {useUi} from '#imports';
 
+const ui = useUi();
 const carDetailStore = useCarDetailStore();
 const fieldMap = carDetailStore.validator.fieldMap
 const engine = fieldMap.engine
@@ -31,7 +34,7 @@ function validatePower(val) {
   <div class="p-2.5">
     <form @submit.prevent="carDetailStore.save">
       <AntFormGroup>
-        <AntFormGroup :direction="useUi().Direction.row">
+        <AntFormGroup :direction="ui.Direction.row">
           <AntTextInput
             v-model="carDetailStore.entity.engine.type"
             :label="engine.type.readableName"
@@ -52,7 +55,7 @@ function validatePower(val) {
           />
         </AntFormGroup>
 
-        <AntFormGroup :direction="useUi().Direction.row">
+        <AntFormGroup :direction="ui.Direction.row">
           <AntUnitInput
             v-model="carDetailStore.entity.engine.powerPs"
             unit="ps"

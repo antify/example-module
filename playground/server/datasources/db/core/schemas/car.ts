@@ -1,7 +1,7 @@
-import {defineSchema} from '../../../../../../../database';
+import {defineSchema} from '@antify/database';
 
 /**
- * This is an example, how to extend an existing schema coming form a module.
+ * This is an example, how to extend an existing schema coming from a module.
  */
 // TODO:: how to extend the type?
 // export type Car = {

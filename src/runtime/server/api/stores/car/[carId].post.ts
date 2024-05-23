@@ -1,6 +1,7 @@
 import {type Car, validator} from '../../../../glue/stores/car';
+import {defineEventHandler, readBody} from '#imports';
 import {getContext, useDatabaseClient} from '#database-module';
-import {isAuthorizedHandler} from '#auth-module';
+import {isAuthorizedHandler} from '#authorization-module';
 import {PermissionId} from '../../../../glue/permissions';
 
 export default defineEventHandler(async (event) => {

@@ -1,118 +1,118 @@
 <script lang="ts" setup>
 // import type {TableHeader} from "@antify/ui-module";
 import {type Car} from '../../glue/stores/car';
-import {useFetch} from 'nuxt/app';
-import {useCarListingStore, useCarRoutingStore, useCarDetailStore, useCarContextStore} from '../../stores/car';
-import {watch, onMounted, ref, useNuxtApp, useRoute, computed} from '#imports';
-import {storeToRefs} from 'pinia';
+import {
+	useCarListingStore,
+	useCarRoutingStore,
+	useCarDetailStore,
+	useCarContextStore
+} from '../../stores/car';
+import {
+	onMounted,
+	ref,
+	useNuxtApp,
+	useRoute,
+	computed,
+	useUi,
+	showError,
+	useFetch
+} from '#imports';
 
 defineProps<{
-  showLightVersion: boolean
+	showLightVersion: boolean
 }>();
 
 const detailStore = useCarDetailStore();
 const routingStore = useCarRoutingStore();
 const listingStore = useCarListingStore();
 const contextStore = useCarContextStore();
-const {headers} = storeToRefs(useCarContextStore());
 const {$uiModule} = useNuxtApp();
-// const carCrud = useCarCrud().value;
 const route = useRoute();
 const ui = useUi();
-// const {
-//   execute,
-//   data,
-//   pending,
-//   error,
-//   refresh
-// } = carCrud.listing;
-// const {
-//   getDetailRoute,
-//   goToDetailPage,
-// } = carCrud.routing;
 const deleteDialogOpen = ref(false);
 const entityToDelete = ref<Car | null>(null);
 // const tableHeaders: TableHeader[] = [
 const tableHeaders = [
-  {
-    title: 'Manufacturer',
-    identifier: 'manufacturer',
-    toProp: 'link',
-    type: ui.AntTableRowTypes.link,
-    lightVersion: true,
-  },
-  {
-    title: 'Model',
-    identifier: 'model',
-    toProp: 'link',
-    type: ui.AntTableRowTypes.link,
-    lightVersion: true,
-  },
-  {
-    title: 'Type',
-    identifier: 'type',
-    type: ui.AntTableRowTypes.text,
-  },
-  {
-    title: 'Color',
-    identifier: 'color',
-    type: ui.AntTableRowTypes.text,
-  },
-  {
-    identifier: 'actions',
-    type: ui.AntTableRowTypes.slot,
-  },
+	{
+		title: 'Manufacturer',
+		identifier: 'manufacturer',
+		toProp: 'link',
+		type: ui.AntTableRowTypes.link,
+		lightVersion: true,
+	},
+	{
+		title: 'Model',
+		identifier: 'model',
+		toProp: 'link',
+		type: ui.AntTableRowTypes.link,
+		lightVersion: true,
+	},
+	{
+		title: 'Type',
+		identifier: 'type',
+		type: ui.AntTableRowTypes.text,
+	},
+	{
+		title: 'Color',
+		identifier: 'color',
+		type: ui.AntTableRowTypes.text,
+	},
+	{
+		identifier: 'actions',
+		type: ui.AntTableRowTypes.slot,
+	},
 ];
 const selectedRow = computed(() => route.params.carId ? listingStore.data?.cars?.find((car) => car._id === route.params.carId) : undefined);
 const cars = computed(() => {
-  return listingStore.data?.cars?.map((car) => {
-    car.link = routingStore.routing.getDetailRoute(car._id);
+	return listingStore.data?.cars?.map((car) => {
+		car.link = routingStore.routing.getDetailRoute(car._id);
 
-    return car;
-  }) || [];
+		return car;
+	}) || [];
 });
 const entityIdToDuplicate = ref<string | null>(null);
 const {
-  error: duplicateError,
-  execute: executeDuplicate,
-  status: duplicateStatus,
+	execute: executeDuplicate,
+	status: duplicateStatus,
 } = useFetch(
-  () => `/api/components/cars/car-table/duplicate/${entityIdToDuplicate.value}`,
-  {
-    method: 'post',
-    headers: contextStore.headers,
-    immediate: false,
-    watch: false,
-    onResponse({response}) {
-      if (response.status === 200) {
-        routingStore.routing.goToDetailPage(response._data._id);
-        listingStore.refresh(false);
-        $uiModule.toaster.toastDuplicated();
-      }
-    }
-  }
-)
+	() => `/api/components/cars/car-table/duplicate/${entityIdToDuplicate.value}`,
+	{
+		method: 'post',
+		headers: contextStore.headers,
+		immediate: false,
+		watch: false,
+		onResponse({response}) {
+			switch (response.status) {
+				case 500:
+					showError(response._data);
+					break;
+				case 200:
+					routingStore.routing.goToDetailPage(response._data._id);
+					listingStore.refresh(false);
+					$uiModule.toaster.toastDuplicated();
+					break;
+			}
+		}
+	}
+);
 
 onMounted(() => listingStore.execute());
 
-// TODO:: handle in useFetch response cb
-watch(duplicateError, () => useUiClient().handler.handleResponseError(duplicateError));
-
 function openDeleteEntity(entity: Car) {
-  entityToDelete.value = entity;
-  deleteDialogOpen.value = true;
+	entityToDelete.value = entity;
+	deleteDialogOpen.value = true;
 }
 
 async function deleteEntity() {
-  if (entityToDelete.value?._id) {
-    await detailStore.executeDelete(entityToDelete.value._id);
-    entityToDelete.value = null;
-  }
+	if (entityToDelete.value?._id) {
+		await detailStore.executeDelete(entityToDelete.value._id);
+		entityToDelete.value = null;
+	}
 }
 
 function duplicateEntity(id: string) {
-  entityIdToDuplicate.value = id;
-  executeDuplicate()
+	entityIdToDuplicate.value = id;
+	executeDuplicate();
 }
 </script>
 

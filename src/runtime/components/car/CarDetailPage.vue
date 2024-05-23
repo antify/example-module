@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, useRoute, onMounted} from '#imports';
+import {computed, useRoute, onMounted, useUi} from '#imports';
 import {
   useCarRoutingStore,
   useCarDetailStore

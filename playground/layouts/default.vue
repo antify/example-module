@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {faCar, faHome} from '@fortawesome/free-solid-svg-icons';
+import {defaultToken} from '../utils';
 
 const navbarItems = [
   {
@@ -33,6 +34,8 @@ const navbarItems = [
     <NuxtPage />
 
     <AntToaster />
-    <AntAuthJWTHelper />
+    <AuthorizationModuleJWTHelper
+      :default-token="defaultToken"
+    />
   </AntNavLeftLayout>
 </template>

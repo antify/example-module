@@ -3,22 +3,30 @@
 import {useRouteQuery} from '@vueuse/router';
 import CarTable from './CarTable.vue';
 import {
-  type CrudOptions,
-  useCarListingStore,
-  useCarRoutingStore,
-  useCarContextStore,
-  useCarDetailStore
+	useCarListingStore,
+	useCarRoutingStore,
+	useCarContextStore
 } from '../../stores/car';
 import {
 	watch,
 	computed,
-	useRoute
+	useRoute,
+	useUiClient
 } from '#imports';
+import type {RouteParams} from 'vue-router';
 
-const props = defineProps<CrudOptions>();
+const props = defineProps<{
+	provider?: string
+	tenantId?: string
+	detailRouteName: string
+	listingRouteName: string
+	getDetailRouteParams?: () => RouteParams,
+	getListingRouteParams?: () => RouteParams,
+	entityIdentifier?: string
+	createEntityIdentifier?: string
+}>();
 const routingStore = useCarRoutingStore();
 const contextStore = useCarContextStore();
-const detailStore = useCarDetailStore();
 const listingStore = useCarListingStore();
 
 routingStore.options = props;
@@ -28,14 +36,14 @@ contextStore.tenantId = props.tenantId;
 const route = useRoute();
 const uiClient = useUiClient();
 const filterColor = useRouteQuery<string | null>('color', null, {
-  transform(val) {
-    return val || null;
-  },
+	transform(val) {
+		return val || null;
+	},
 });
 const filterType = useRouteQuery<string | null>('type', null, {
-  transform(val) {
-    return val || null;
-  },
+	transform(val) {
+		return val || null;
+	},
 });
 
 // const filterColorOptions = computed<SelectOption[]>(() => allColors.value.map((color) => ({
@@ -48,29 +56,27 @@ const filterType = useRouteQuery<string | null>('type', null, {
 // })))
 
 const filterColorOptions = computed(() => listingStore.allColors.map((color) => ({
-  label: color,
-  value: color
-})))
+	label: color,
+	value: color
+})));
 const filterTypeOptions = computed(() => listingStore.allTypes.map((color) => ({
-  label: color,
-  value: color
-})))
+	label: color,
+	value: color
+})));
 
 watch(() => route.query, (to, from) => {
-  if (uiClient.utils.queryChanged(from, to, ['color', 'type'])) {
-    listingStore.refresh();
-  }
-})
-// TODO:: move to store
-watch(() => listingStore.error, (val) => uiClient.handler.handleResponseError(val));
-watch(() => detailStore.readError, (val) => uiClient.handler.handleResponseError(val))
-watch(() => detailStore.createError, (val) => uiClient.handler.handleResponseError(val))
-watch(() => detailStore.updateError, (val) => uiClient.handler.handleResponseError(val))
-watch(() => detailStore.deleteError, (val) => uiClient.handler.handleResponseError(val))
+	if (uiClient.utils.queryChanged(from, to, ['color', 'type'])) {
+		listingStore.refresh();
+	}
+});
 
 function resetFilters() {
-  filterColor.value = null;
-  filterType.value = null;
+	filterColor.value = null;
+	filterType.value = null;
+
+	setTimeout(() => {
+		listingStore.refresh();
+	}, 200);
 }
 </script>
 

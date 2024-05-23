@@ -1,6 +1,5 @@
-import {type Permission} from '../types';
+import {type Permission} from '#authorization-module';
 
-// TODO:: Refactor to can create auth etc.
 export enum PermissionId {
 	CAN_CREATE_CAR = 'CAN_CREATE_CAR',
 	CAN_READ_CAR = 'CAN_READ_CAR',

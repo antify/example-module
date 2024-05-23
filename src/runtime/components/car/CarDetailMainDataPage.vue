@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import {useCarDetailStore} from "../../stores/car";
+import {useUi} from '#imports';
+import {useCarDetailStore} from '../../stores/car';
 
 const carDetailStore = useCarDetailStore();
 
