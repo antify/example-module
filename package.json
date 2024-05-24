@@ -40,7 +40,7 @@
     "standard-version": "^9.5.0"
   },
   "peerDependencies": {
-		"@antify/authorization-module": "file:../authorization-module",
+		"@antify/authorization-module": "^1.0.0",
 		"@antify/app-context-module": "^1.2.0",
 		"@antify/database": "^1.2.0",
 		"@antify/database-module": "^1.2.0",
