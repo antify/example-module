@@ -9,14 +9,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Start Docker Compose
-        run: docker-compose up -d --build
-      # Install pnpm dependencies, cache them correctly
-      # and run all Cypress tests
+        run: docker compose up -d
+#      - name: Show log from docker
+#        run: docker compose logs
+        # Install pnpm dependencies, cache them correctly
+        # and run all Cypress tests
+      - name: Setup playground
+        run: pnpm i && pnpm dev:prepare
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          build: pnpm run dev:prepare && cd e2e && pnpm build
-          start: docker compose up -d && cd e2e && pnpm start
+          project: ./e2e
           browser: chrome
         env:
           # overwrite commit message sent to Cypress Cloud
