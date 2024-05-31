@@ -14,6 +14,10 @@ jobs:
 #        run: docker compose logs
         # Install pnpm dependencies, cache them correctly
         # and run all Cypress tests
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
       - name: Setup playground
         run: pnpm i && pnpm dev:prepare
       - name: Cypress run
