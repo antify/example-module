@@ -2,12 +2,14 @@ version: '3'
 
 services:
   playground:
+    container_name: e2e-playground
     build:
       context: ..
       dockerfile: Dockerfile
     ports:
       - '3000:3000'
   database:
+    container_name: e2e-database
     image: mongo:latest
     restart: always
     environment:
