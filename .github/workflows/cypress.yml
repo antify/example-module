@@ -21,12 +21,12 @@ jobs:
       - name: Setup playground
         run: pnpm i --frozen-lockfile && pnpm dev:prepare
       - name: Setup e2e
-        run: cd ./e2e && pnpm i
+        run: cd ./e2e && npm i
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
           project: e2e
-          install: false
+#          install: false
           browser: chrome
         env:
           # overwrite commit message sent to Cypress Cloud
