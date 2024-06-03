@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@antify/e2e-test-utils':
-    specifier: file:../../e2e-test-utils
-    version: file:../../e2e-test-utils(cypress@13.6.4)
+    specifier: ^1.0.0
+    version: 1.0.0(cypress@13.6.4)
   cypress:
     specifier: ^13.6.4
     version: 13.6.4
@@ -16,6 +16,14 @@ dependencies:
     version: 5.3.3
 
 packages:
+
+  /@antify/e2e-test-utils@1.0.0(cypress@13.6.4):
+    resolution: {integrity: sha512-W0ZXcDFhjQdqeQGHdtelrdQ6fjh3EzKKmmgN5Kd35CF1iAIji8/C2/NFgLpWlxaOGMiXfiqwuZSYmwP7qKLwgg==}
+    peerDependencies:
+      cypress: ^13.6.4
+    dependencies:
+      cypress: 13.6.4
+    dev: false
 
   /@colors/colors@1.5.0:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
@@ -1233,14 +1241,4 @@ packages:
     dependencies:
       buffer-crc32: 0.2.13
       fd-slicer: 1.1.0
-    dev: false
-
-  file:../../e2e-test-utils(cypress@13.6.4):
-    resolution: {directory: ../../e2e-test-utils, type: directory}
-    id: file:../../e2e-test-utils
-    name: '@antify/e2e-test-utils'
-    peerDependencies:
-      cypress: ^13.6.4
-    dependencies:
-      cypress: 13.6.4
     dev: false
