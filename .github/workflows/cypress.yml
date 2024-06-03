@@ -9,7 +9,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Start Docker Compose
-        run: docker compose up -d --build
+        run: cd 2e2 && docker compose up -d --build
 #      - name: Show log from docker
 #        run: docker compose logs
         # Install pnpm dependencies, cache them correctly
