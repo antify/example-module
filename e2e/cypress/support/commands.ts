@@ -37,13 +37,13 @@
 // }
 
 Cypress.Commands.add('loadFixtures', () => {
-  cy.exec('cd ../ && npx db load-fixtures core', {timeout: 10000, log: true})
+  cy.exec('pnpm db load-fixtures core', {timeout: 10000, log: true})
     .its('stderr')
     .should('eq', '');
 });
 
 Cypress.Commands.add('truncateCars', () => {
-  cy.exec('cd ../ && npx db truncate core --collections=cars', {timeout: 10000, log: true})
+  cy.exec('pnpm db truncate core --collections=cars', {timeout: 10000, log: true})
     .its('stderr')
     .should('eq', '');
 });
