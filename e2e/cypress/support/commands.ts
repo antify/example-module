@@ -37,7 +37,7 @@
 // }
 
 Cypress.Commands.add('loadFixtures', () => {
-	cy.exec('docker exec -it e2e-playground sh -c "pnpm db load-fixtures core"', {timeout: 10000, log: true})
+	cy.exec('docker exec e2e-playground sh -c "pnpm db load-fixtures core"', {timeout: 10000, log: true})
 		.its('stderr')
 		.should('eq', '');
   // cy.exec('cd ../ && pnpm db load-fixtures core', {timeout: 10000, log: true})
@@ -46,7 +46,7 @@ Cypress.Commands.add('loadFixtures', () => {
 });
 
 Cypress.Commands.add('truncateCars', () => {
-  cy.exec('docker exec -it e2e-playground sh -c "pnpm db truncate core --collections=cars"', {timeout: 10000, log: true})
+  cy.exec('docker exec e2e-playground sh -c "pnpm db truncate core --collections=cars"', {timeout: 10000, log: true})
     .its('stderr')
     .should('eq', '');
 
