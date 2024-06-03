@@ -19,13 +19,13 @@ jobs:
         with:
           version: 8
       - name: Setup playground
-        run: pnpm i && pnpm dev:prepare
+        run: pnpm i --frozen-lockfile && pnpm dev:prepare
       - name: Setup e2e
         run: cd ./e2e && pnpm i
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          project: ./e2e
+          project: e2e
           install: false
           browser: chrome
         env:
