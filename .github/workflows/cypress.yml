@@ -8,13 +8,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Start Docker Compose
+      - name: Build & start docker containers
         run: cd e2e && docker compose up -d --build
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 8
-      - name: Cypress run
+      - name: Run cypress
         uses: cypress-io/github-action@v6
         with:
           working-directory: e2e
