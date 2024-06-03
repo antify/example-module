@@ -11,14 +11,6 @@ services:
       MONGO_INITDB_PASSWORD: core
       MONGO_INITDB_DATABASE: core
     ports:
-      - 27017:27017
+      - '27017:27017'
     volumes:
       - ./docker/docker-entrypoint-initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-
-  mailhog:
-    image: mailhog/mailhog
-    logging:
-      driver: 'none' # disable saving logs
-    ports:
-      - '8025:8025' # web ui
-      - '1025:1025' # smtp server

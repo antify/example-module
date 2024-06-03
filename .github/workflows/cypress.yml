@@ -9,7 +9,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Start Docker Compose
-        run: docker compose up -d
+        run: docker compose up -d --build
 #      - name: Show log from docker
 #        run: docker compose logs
         # Install pnpm dependencies, cache them correctly
@@ -18,16 +18,12 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 8
-      - name: Setup playground
-        run: pnpm i --frozen-lockfile && pnpm dev:prepare
-#      - name: Setup e2e
-#        run: cd ./e2e && npm i #--frozen-lockfile
+#      - name: Setup playground
+#        run: pnpm i --frozen-lockfile && pnpm dev:prepare
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
           working-directory: e2e
-          # we have already installed all dependencies above
-#          install: false
           browser: chrome
         env:
           # overwrite commit message sent to Cypress Cloud
