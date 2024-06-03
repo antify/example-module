@@ -40,6 +40,7 @@ Cypress.Commands.add('loadFixtures', () => {
   cy.exec('cd ../ && pnpm db load-fixtures core', {timeout: 10000, log: true})
     .its('stderr')
     .should('eq', '');
+	cy.exec('cd ../ && ls -la').log('HERE')
 });
 
 Cypress.Commands.add('truncateCars', () => {
