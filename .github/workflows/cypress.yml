@@ -20,6 +20,8 @@ jobs:
           version: 8
       - name: Setup playground
         run: pnpm i && pnpm dev:prepare
+      - name: Setup e2e
+        run: cd ./e2e && pnpm i
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
