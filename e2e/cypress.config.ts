@@ -1,4 +1,4 @@
-import { defineConfig } from "cypress";
+import { defineConfig } from 'cypress';
 
 export default defineConfig({
   viewportWidth: 1920,
@@ -9,4 +9,8 @@ export default defineConfig({
       // implement node event listeners here
     },
   },
+	env: {
+		// Defines if the app playground run's in a docker container or local on host
+		PLAYGROUND_RUN_IN_DOCKER: false
+	}
 });
