@@ -26,6 +26,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           project: ./e2e
+          install: false
           browser: chrome
         env:
           # overwrite commit message sent to Cypress Cloud
