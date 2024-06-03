@@ -11,6 +11,6 @@ export default defineConfig({
   },
 	env: {
 		// Defines if the app playground run's in a docker container or local on host
-		PLAYGROUND_RUN_IN_DOCKER: false
+		PLAYGROUND_RUN_IN_DOCKER: !!process.env.CYPRESS_PLAYGROUND_RUN_IN_DOCKER || false
 	}
 });

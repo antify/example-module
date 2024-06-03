@@ -17,7 +17,7 @@ jobs:
       - name: Run cypress
         uses: cypress-io/github-action@v6
         env:
-          PLAYGROUND_RUN_IN_DOCKER: true
+          CYPRESS_PLAYGROUND_RUN_IN_DOCKER: true
         with:
           working-directory: e2e
           browser: chrome
